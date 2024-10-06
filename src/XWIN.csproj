@@ -1,0 +1,44 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net7.0-windows</TargetFramework>
+    <RootNamespace>XWIN</RootNamespace>
+    <AssemblyName>X-WIN</AssemblyName>
+    <Product>X-WIN</Product>
+    <PackageId>X-WIN</PackageId>
+    <Company>Localzet Group</Company>
+    <Copyright>Copyright (C) 2024 Localzet Group</Copyright>
+    <Version>2.3.2.0</Version>
+    <AssemblyVersion>2.3.2.0</AssemblyVersion>
+    <Nullable>enable</Nullable>
+    <NoWarn>0108;8600;8601;8602;8603;8604;8618;8625;8629;8762</NoWarn>
+    <UseWPF>true</UseWPF>
+    <ApplicationIcon>Assets/Icon.ico</ApplicationIcon>
+    <PublishSingleFile>true</PublishSingleFile>
+    <_SuppressWpfTrimError>true</_SuppressWpfTrimError>
+    <BuiltInComInteropSupport>true</BuiltInComInteropSupport>
+    <PublishTrimmed>true</PublishTrimmed>
+    <TrimMode>partial</TrimMode>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="NetCore5.0.Microsoft.Expression.Drawing" Version="1.0.0" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.2" />
+    <PackageReference Include="QRCoder.Xaml" Version="1.6.0" />
+    <PackageReference Include="System.Drawing.Common" Version="7.0.0" />
+    <PackageReference Include="System.Management" Version="7.0.0" />
+    <PackageReference Include="System.Windows.Forms" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Libraries/*.*">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+
+    <Content Include="*.dat">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+</Project>

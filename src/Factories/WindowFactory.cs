@@ -1,0 +1,167 @@
+using System.Windows;
+
+namespace XWIN.Factories
+{
+    using Core;
+    using Models;
+    using Managers;
+    using Handlers;
+
+    public class WindowFactory
+    {
+        private LocalzetXRayCore core;
+        private HandlersManager handlersManager;
+
+        public void Setup(LocalzetXRayCore core, HandlersManager handlersManager)
+        {
+            this.core = core;
+            this.handlersManager = handlersManager;
+        }
+
+        public MainWindow GetMainWindow() => Application.Current.MainWindow as MainWindow;
+
+        public MainWindow CreateMainWindow()
+        {
+            ConfigHandler configHandler = handlersManager.GetHandler<ConfigHandler>();
+            UpdateHandler updateHandler = handlersManager.GetHandler<UpdateHandler>();
+            BroadcastHandler broadcastHandler = handlersManager.GetHandler<BroadcastHandler>();
+            SettingsHandler settingsHandler = handlersManager.GetHandler<SettingsHandler>();
+            LinkHandler linkHandler = handlersManager.GetHandler<LinkHandler>();
+
+            MainWindow mainWindow = new MainWindow();
+            mainWindow.Setup(
+                getConfig: configHandler.GetCurrentConfig,
+                loadConfig: core.LoadConfig,
+                enableMode: core.EnableMode,
+                checkForUpdate: updateHandler.CheckForUpdate,
+                checkForBroadcast: broadcastHandler.CheckForBroadcast,
+                openServerWindow: CreateServerWindow,
+                openSettingsWindow: CreateSettingsWindow,
+                openUpdateWindow: CreateUpdateWindow,
+                openAboutWindow: CreateAboutWindow,
+                onRunServer: core.Run,
+                onStopServer: core.Stop,
+                onCancelServer: core.Cancel,
+                onDisableMode: core.DisableMode,
+                onGenerateClientId: settingsHandler.GenerateClientId,
+                onGitHubClick: linkHandler.OpenGitHubRepositoryLink,
+                onBugReportingClick: linkHandler.OpenBugReportingLink,
+                onCustomLinkClick: linkHandler.OpenCustomLink
+            );
+            
+            return mainWindow;
+        }
+
+        public SettingsWindow CreateSettingsWindow()
+        {
+            SettingsHandler settingsHandler = handlersManager.GetHandler<SettingsHandler>();
+            NotifyHandler notifyHandler = handlersManager.GetHandler<NotifyHandler>();
+
+            SettingsWindow settingsWindow = new SettingsWindow();
+            settingsWindow.Setup(
+                getMode: settingsHandler.UserSettings.GetMode,
+                getProtocol: settingsHandler.UserSettings.GetProtocol,
+                getSystemProxyUsed: settingsHandler.UserSettings.GetSystemProxyUsed,
+                getUdpEnabled: settingsHandler.UserSettings.GetUdpEnabled,
+                getRunningAtStartupEnabled: settingsHandler.UserSettings.GetRunningAtStartupEnabled,
+                getSendingAnalyticsEnabled: settingsHandler.UserSettings.GetSendingAnalyticsEnabled,
+                getProxyPort: settingsHandler.UserSettings.GetProxyPort,
+                getTunPort: settingsHandler.UserSettings.GetTunPort,
+                getTestPort: settingsHandler.UserSettings.GetTestPort,
+                getDeviceIp: settingsHandler.UserSettings.GetTunIp,
+                getDns: settingsHandler.UserSettings.GetDns,
+                getLogLevel: settingsHandler.UserSettings.GetLogLevel,
+                getLogPath: settingsHandler.UserSettings.GetLogPath,
+                onUpdateUserSettings: UpdateUserSettings
+            );
+
+            return settingsWindow;
+
+            void UpdateUserSettings(UserSettings userSettings)
+            {
+                settingsHandler.UpdateUserSettings(userSettings);
+                notifyHandler.CheckModeItem(userSettings.GetMode());
+                GetMainWindow().TryDisableModeAndRerun();
+            }
+        }
+
+        public UpdateWindow CreateUpdateWindow()
+        {
+            UpdateHandler updateHandler = handlersManager.GetHandler<UpdateHandler>();
+            LinkHandler linkHandler = handlersManager.GetHandler<LinkHandler>();
+
+            UpdateWindow updateWindow = new UpdateWindow();
+            updateWindow.Setup(
+                checkForUpdate: updateHandler.CheckForUpdate,
+                onUpdateClick: linkHandler.OpenLatestReleaseLink
+            );
+
+            return updateWindow;
+        }
+
+        public AboutWindow CreateAboutWindow()
+        {
+            VersionHandler versionHandler = handlersManager.GetHandler<VersionHandler>();
+            LinkHandler linkHandler = handlersManager.GetHandler<LinkHandler>();
+
+            AboutWindow aboutWindow = new AboutWindow();
+            aboutWindow.Setup(
+                getApplicationVersion: GetApplicationVersion,
+                getXRayCoreVersion: GetXRayCoreVersion,
+                onEmailClick: linkHandler.OpenEmailLink,
+                onWebsiteClick: linkHandler.OpenWebsiteLink,
+                onBugReportingClick: linkHandler.OpenBugReportingLink
+            );
+
+            return aboutWindow;
+
+            string GetApplicationVersion()
+            {
+                AppVersion appVersion = versionHandler.GetApplicationVersion();
+                return $"{appVersion.Major}.{appVersion.Feature}.{appVersion.BugFix}";
+            }
+
+            string GetXRayCoreVersion()
+            {
+                return core.GetVersion();
+            }
+        }
+
+        public ServerWindow CreateServerWindow()
+        {
+            ConfigHandler configHandler = handlersManager.GetHandler<ConfigHandler>();
+            TemplateHandler templateHandler = handlersManager.GetHandler<TemplateHandler>();
+            SettingsHandler settingsHandler = handlersManager.GetHandler<SettingsHandler>();
+            MainWindow mainWindow = GetMainWindow();
+            
+            ServerWindow serverWindow = new ServerWindow();
+            serverWindow.Setup(
+                getCurrentConfigPath: settingsHandler.UserSettings.GetCurrentConfigPath,
+                isCurrentPathEqualRootConfigPath: configHandler.IsCurrentPathEqualRootConfigPath,
+                getAllGeneralConfigs: configHandler.GetAllGeneralConfigs,
+                getAllSubscriptionConfigs: configHandler.GetAllSubscriptionConfigs,
+                getAllGroups: configHandler.GetAllGroups,
+                convertLinkToConfig: templateHandler.ConverLinkToConfig,
+                convertLinkToSubscription: templateHandler.ConvertLinkToSubscription,
+                loadConfig: core.LoadConfig,
+                testConnection: core.Test,
+                getLogPath: settingsHandler.UserSettings.GetLogPath,
+                onCopyConfig: configHandler.CopyConfig,
+                onCreateConfig: configHandler.CreateConfig,
+                onCreateSubscription: configHandler.CreateSubscription,
+                onDeleteSubscription: configHandler.DeleteSubscription,
+                onDeleteConfig: configHandler.LoadFiles,
+                onUpdateConfig: UpdateConfig
+            );
+            
+            return serverWindow;
+
+            void UpdateConfig(string path)
+            {
+                settingsHandler.UpdateCurrentConfigPath(path);
+                mainWindow.UpdateUI();
+                mainWindow.TryRerun();
+            }
+        }
+    }
+}
