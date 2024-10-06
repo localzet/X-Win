@@ -2,14 +2,24 @@
   <img src="https://static.zorin.space/media/logos/LocalzetGroup.png" width="400">
 </a></p>
 
+<p align="center">
+  <a href="https://github.com/localzet/x-win/releases">
+  <img src="https://img.shields.io/github/downloads/localzet/x-win/total.svg?label=%D0%A1%D0%BA%D0%B0%D1%87%D0%B8%D0%B2%D0%B0%D0%BD%D0%B8%D1%8F" alt="Скачивания">
+</a>
+  <a href="https://github.com/localzet/x-win">
+  <img src="https://img.shields.io/github/commit-activity/t/localzet/x-win?label=%D0%9A%D0%BE%D0%BC%D0%BC%D0%B8%D1%82%D1%8B" alt="Коммиты">
+</a>
+  <a href="https://github.com/localzet/x-win/releases/latest">
+  <img src="https://img.shields.io/github/v/release/localzet/x-win?label=%D0%92%D0%B5%D1%80%D1%81%D0%B8%D1%8F" alt="Версия">
+</a>
+  <a href="https://github.com/localzet/x-win">
+  <img src="https://img.shields.io/github/license/localzet/x-win?label=%D0%9B%D0%B8%D1%86%D0%B5%D0%BD%D0%B7%D0%B8%D1%8F" alt="Лицензия">
+</a>
+</p>
+
 # X-WIN - Windows XRay Client
 
 > Клиент для ядра XRay
-
-[![Downloads](https://img.shields.io/github/downloads/localzet/x-win/total.svg?label=downloads%20%28total%29)](https://github.com/localzet/x-win/releases)
-[![DownloadsLatest](https://img.shields.io/github/downloads/localzet/x-win/latest/total?label=downloads%20%28latest%29)](https://github.com/localzet/x-win/releases/latest)
-[![LatestVersion](https://img.shields.io/github/v/release/localzet/x-win?label=latest%20version)](https://github.com/localzet/x-win/releases/latest)
-[![CodeFactor](https://www.codefactor.io/repository/github/localzet/x-win/badge)](https://www.codefactor.io/repository/github/localzet/x-win)
 
 X-WIN — это клиент, поддерживающий [XRay](https://github.com/XTLS/Xray-core). Он предоставляет простой в использовании интерфейс для настройки и управления прокси-серверами и позволяет пользователям переключаться между различными серверами.
 
